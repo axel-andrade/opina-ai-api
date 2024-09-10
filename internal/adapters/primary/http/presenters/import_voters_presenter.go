@@ -1,7 +1,6 @@
 package presenters
 
 import (
-	"encoding/json"
 	"net/http"
 
 	common_adapters "github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/common"
@@ -24,9 +23,8 @@ func (p *ImportVotersPresenter) Show(result *import_voters.ImportVotersOutput, e
 	}
 
 	fc := p.ImportPtr.Format(result.Import)
-	data, _ := json.Marshal(fc)
 
-	return common_adapters.OutputPort{StatusCode: http.StatusAccepted, Data: data}
+	return common_adapters.OutputPort{StatusCode: http.StatusAccepted, Data: fc}
 }
 
 func (p *ImportVotersPresenter) formatError() common_adapters.OutputPort {

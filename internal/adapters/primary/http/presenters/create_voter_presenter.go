@@ -1,7 +1,6 @@
 package presenters
 
 import (
-	"encoding/json"
 	"net/http"
 
 	common_adapters "github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/common"
@@ -23,10 +22,9 @@ func (p *CreateVoterPresenter) Show(result *create_voter.CreateVoterOutput, err 
 		return p.formatError(err)
 	}
 
-	fc := p.VoterPtr.Format(result.Voter)
-	data, _ := json.Marshal(fc)
+	vf := p.VoterPtr.Format(result.Voter)
 
-	return common_adapters.OutputPort{StatusCode: http.StatusCreated, Data: data}
+	return common_adapters.OutputPort{StatusCode: http.StatusCreated, Data: vf}
 }
 
 func (p *CreateVoterPresenter) formatError(err error) common_adapters.OutputPort {

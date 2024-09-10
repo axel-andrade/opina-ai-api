@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"io"
+	"net/http"
 
 	"github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/presenters"
 	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/import_voters"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 type ImportVotersController struct {
@@ -25,7 +27,7 @@ func BuildImportVotersController(uc *import_voters.ImportVotersUC, ptr *presente
 // @Success		204
 // @Router			/api/v1/voters/import [post]
 func (ctrl *ImportVotersController) Handle(c *gin.Context) {
-	userID := "123"
+	userID := uuid.NewV4().String()
 
 	// Get the file from the form-data
 	file, err := c.FormFile("file")
@@ -37,7 +39,7 @@ func (ctrl *ImportVotersController) Handle(c *gin.Context) {
 	// Open the file
 	openedFile, err := file.Open()
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Failed to open file"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to open file"})
 		return
 	}
 	defer openedFile.Close()
@@ -45,7 +47,7 @@ func (ctrl *ImportVotersController) Handle(c *gin.Context) {
 	// Read the file content to transform into []byte
 	fileBytes, err := io.ReadAll(openedFile)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Failed to read file"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to read file"})
 		return
 	}
 

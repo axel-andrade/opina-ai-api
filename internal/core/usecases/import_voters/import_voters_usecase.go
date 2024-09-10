@@ -19,17 +19,17 @@ func BuildImportVotersUC(g ImportVotersGateway) *ImportVotersUC {
 }
 
 func (bs *ImportVotersUC) Execute(input ImportVotersInput) (*ImportVotersOutput, error) {
+	log.Println("Building import")
+	i := domain.BuildNewImport(input.UserID, input.Filename)
+
 	log.Println("Creating import")
-	createdImport, err := bs.Gateway.CreateImport(&domain.Import{
-		UserID:   input.UserID,
-		Filename: "voters.csv",
-	})
+	createdImport, err := bs.Gateway.CreateImport(i)
 	if err != nil {
 		return nil, err
 	}
 
 	// Retorne imediatamente com o ID da importação
-	go bs.processImport(createdImport, input.Data)
+	// go bs.processImport(createdImport, input.Data)
 
 	return &ImportVotersOutput{Import: createdImport}, nil
 }
