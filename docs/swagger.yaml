@@ -1,0 +1,54 @@
+definitions:
+  common_ptr.VoterFormatted:
+    properties:
+      cellphone:
+        example: "+5511999999999"
+        type: string
+      created_at:
+        example: "2021-01-01T00:00:00Z"
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      id:
+        example: "123"
+        type: string
+      updated_at:
+        example: "2021-01-01T00:00:00Z"
+        type: string
+    type: object
+  create_voter.CreateVoterInput:
+    properties:
+      cellphone:
+        example: "553199999999"
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/voters:
+    post:
+      consumes:
+      - application/json
+      description: Create a new voter
+      parameters:
+      - description: Voter data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/create_voter.CreateVoterInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/common_ptr.VoterFormatted'
+      summary: Create a new voter
+      tags:
+      - voters
+swagger: "2.0"

@@ -1,0 +1,82 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/v1/voters": {
+            "post": {
+                "description": "Create a new voter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voters"
+                ],
+                "summary": "Create a new voter",
+                "parameters": [
+                    {
+                        "description": "Voter data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/create_voter.CreateVoterInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/common_ptr.VoterFormatted"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "common_ptr.VoterFormatted": {
+            "type": "object",
+            "properties": {
+                "cellphone": {
+                    "type": "string",
+                    "example": "+5511999999999"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "123"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2021-01-01T00:00:00Z"
+                }
+            }
+        },
+        "create_voter.CreateVoterInput": {
+            "type": "object",
+            "properties": {
+                "cellphone": {
+                    "type": "string",
+                    "example": "553199999999"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                }
+            }
+        }
+    }
+}
