@@ -11,4 +11,9 @@ func RunMigrations(db *gorm.DB) {
 		RollbackCreateVoterTable(db)
 		log.Fatal(err)
 	}
+
+	if err := MigrateCreateImportTable(db); err != nil {
+		RollbackCreateImportTable(db)
+		log.Fatal(err)
+	}
 }

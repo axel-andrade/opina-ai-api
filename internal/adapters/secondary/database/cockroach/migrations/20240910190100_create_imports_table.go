@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func MigrateCreateImport(tx *gorm.DB) error {
+func MigrateCreateImportTable(tx *gorm.DB) error {
 	if !tx.Migrator().HasTable(&cockroach_models.ImportModel{}) {
 		if err := tx.AutoMigrate(&cockroach_models.ImportModel{}); err != nil {
 			return err
