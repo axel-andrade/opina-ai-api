@@ -1,9 +1,11 @@
 package import_voters
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/axel-andrade/opina-ai-api/internal/core/domain"
@@ -29,7 +31,7 @@ func (bs *ImportVotersUC) Execute(input ImportVotersInput) (*ImportVotersOutput,
 	}
 
 	// Retorne imediatamente com o ID da importação
-	// go bs.processImport(createdImport, input.Data)
+	go bs.processImport(createdImport, input.Data)
 
 	return &ImportVotersOutput{Import: createdImport}, nil
 }
@@ -86,13 +88,24 @@ func (bs *ImportVotersUC) updateImportError(createdImport *domain.Import, err er
 }
 
 func (bs *ImportVotersUC) parseCSVToDomain(data []byte) ([]*domain.Voter, error) {
-	// Create a CSV reader
+	delimiter, err := detectDelimiter(data)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a CSV reader and set the delimiter to ';'
 	reader := csv.NewReader(bytes.NewReader(data))
+	reader.Comma = delimiter
 
 	// Read reads one record (a slice of fields) from r. The record is a slice of strings with each string representing one field.
 	header, err := reader.Read()
 	if err != nil {
 		return nil, err
+	}
+
+	allowedFields := map[string]bool{
+		"full_name": true,
+		"cellphone": true,
 	}
 
 	// Check if required fields are present
@@ -102,6 +115,12 @@ func (bs *ImportVotersUC) parseCSVToDomain(data []byte) ([]*domain.Voter, error)
 	}
 
 	for _, field := range header {
+		// Check if the field is allowed
+		if _, exists := allowedFields[field]; !exists {
+			return nil, fmt.Errorf("campo não permitido: %s", field)
+		}
+
+		// Mark the required field as found
 		if _, exists := requiredFields[field]; exists {
 			requiredFields[field] = true
 		}
@@ -115,7 +134,7 @@ func (bs *ImportVotersUC) parseCSVToDomain(data []byte) ([]*domain.Voter, error)
 
 	var voters []*domain.Voter
 
-	// Iterates over the remaining lines
+	// Iterate over the remaining lines
 	for {
 		record, err := reader.Read()
 		if err != nil {
@@ -144,4 +163,48 @@ func (bs *ImportVotersUC) parseCSVToDomain(data []byte) ([]*domain.Voter, error)
 	}
 
 	return voters, nil
+}
+
+func detectDelimiter(data []byte) (rune, error) {
+	firstLine, err := readFirstLine(data)
+	if err != nil {
+		return ',', err
+	}
+
+	// Possibles delimiters to be tested
+	delimiters := []rune{';', ',', '\t'}
+
+	bestDelimiter := delimiters[0]
+	bestCount := 0
+
+	for _, delimiter := range delimiters {
+		count := countOccurrences(firstLine, delimiter)
+		if count > bestCount {
+			bestDelimiter = delimiter
+			bestCount = count
+		}
+	}
+
+	return bestDelimiter, nil
+}
+
+// Function to read the first line of the CSV
+func readFirstLine(data []byte) (string, error) {
+	reader := bufio.NewReader(bytes.NewReader(data))
+	line, err := reader.ReadString('\n')
+	if err != nil && err != io.EOF {
+		return "", err
+	}
+	return line, nil
+}
+
+// Function to count how many times the delimiter appears in the line
+func countOccurrences(s string, delimiter rune) int {
+	count := 0
+	for _, char := range s {
+		if char == delimiter {
+			count++
+		}
+	}
+	return count
 }

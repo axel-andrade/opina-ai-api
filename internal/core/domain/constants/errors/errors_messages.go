@@ -25,4 +25,5 @@ const (
 	INVALID_CELLPHONE           = "the cellphone field should be in the format 5511999999999"
 	VOTER_ALREADY_EXISTS        = "voter already exists"
 	MISSING_REQUIRED_FIELDS_CSV = "missing required fields"
+	COLUMN_NOT_ALLOWED          = "column not allowed: %s"
 )
