@@ -6,8 +6,8 @@ import (
 	"github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/presenters"
 	common_ptr "github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/presenters/common"
 	cockroach_repositories "github.com/axel-andrade/opina-ai-api/internal/adapters/secondary/database/cockroach/repositories"
-	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/import_voters"
 	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/voter/create_voter"
+	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/voter/import_voters"
 )
 
 type Dependencies struct {

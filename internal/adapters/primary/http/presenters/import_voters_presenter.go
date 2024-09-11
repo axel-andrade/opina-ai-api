@@ -6,7 +6,7 @@ import (
 	common_adapters "github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/common"
 	common_ptr "github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/presenters/common"
 	err_msg "github.com/axel-andrade/opina-ai-api/internal/core/domain/constants/errors"
-	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/import_voters"
+	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/voter/import_voters"
 )
 
 type ImportVotersPresenter struct {

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/axel-andrade/opina-ai-api/internal/adapters/primary/http/presenters"
-	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/import_voters"
+	"github.com/axel-andrade/opina-ai-api/internal/core/usecases/voter/import_voters"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 )
